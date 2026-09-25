@@ -1,0 +1,426 @@
+/* Shared UI primitives — premium styling. */
+
+/* ── Button base ──────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 11px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-raised);
+  color: var(--text);
+  border-radius: var(--r-md);
+  font-size: var(--fs-md);
+  font-weight: 500;
+  white-space: nowrap;
+  user-select: none;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-spring);
+}
+.btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--line-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.btn:active:not(:disabled) {
+  background: var(--bg-active);
+  transform: translateY(0);
+  box-shadow: none;
+}
+.btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ── Button variants ──────────────────────────────────────────── */
+.btnPrimary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 0 0 var(--accent-glow);
+}
+.btnPrimary:hover:not(:disabled) {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 16px var(--accent-glow), 0 2px 6px rgba(0,0,0,0.4);
+}
+.btnMosh {
+  background: var(--mosh);
+  border-color: var(--mosh);
+  color: #0a0600;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.btnMosh:hover:not(:disabled) {
+  background: var(--mosh-bright);
+  border-color: var(--mosh-bright);
+  box-shadow: 0 0 16px var(--mosh-glow), 0 2px 6px rgba(0,0,0,0.4);
+}
+.btnGhost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-dim);
+}
+.btnGhost:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--line);
+  color: var(--text);
+  transform: translateY(0);
+  box-shadow: none;
+}
+.btnDanger {
+  color: var(--danger);
+  border-color: var(--danger-dim);
+  background: transparent;
+}
+.btnDanger:hover:not(:disabled) {
+  background: rgba(255, 77, 106, 0.08);
+  border-color: var(--danger);
+  box-shadow: 0 0 8px rgba(255, 77, 106, 0.15);
+}
+.btnActive {
+  border-color: var(--accent);
+  color: var(--text);
+  background: rgba(61, 139, 253, 0.12);
+  box-shadow: var(--shadow-accent);
+}
+
+/* ── Panel ────────────────────────────────────────────────────── */
+.panel {
+  display: block;
+  animation: fadeIn var(--dur-base) var(--ease-out);
+}
+.panelHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 12px 7px;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 700;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+}
+.panelBody {
+  padding: 10px 12px 14px;
+}
+.panelToggle {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text-faint);
+  text-transform: none;
+  letter-spacing: 0;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.panelToggle:hover {
+  color: var(--text);
+}
+
+/* ── Row helpers ──────────────────────────────────────────────── */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+}
+.rowBetween {
+  justify-content: space-between;
+}
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Form fields ──────────────────────────────────────────────── */
+.field {
+  display: block;
+  margin-bottom: 10px;
+}
+.fieldHead {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.label {
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.value {
+  font-family: var(--mono);
+  font-size: var(--fs-sm);
+  color: var(--accent-bright);
+  font-variant-numeric: tabular-nums;
+}
+.unit {
+  color: var(--text-faint);
+  font-size: var(--fs-xs);
+}
+.hint {
+  font-size: var(--fs-xs);
+  color: var(--text-faint);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* ── Range slider ─────────────────────────────────────────────── */
+.range {
+  width: 100%;
+  height: 20px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  touch-action: none;
+}
+.range:hover {
+  accent-color: var(--accent-bright);
+}
+.rangeMosh {
+  accent-color: var(--mosh);
+}
+.rangeMosh:hover {
+  accent-color: var(--mosh-bright);
+}
+
+/* ── Text input ───────────────────────────────────────────────── */
+.input {
+  height: 28px;
+  width: 100%;
+  padding: 0 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-size: var(--fs-md);
+  font-family: var(--mono);
+  transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+  outline: none;
+}
+
+/* ── Select ───────────────────────────────────────────────────── */
+.select {
+  height: 28px;
+  width: 100%;
+  padding: 0 6px;
+  background: var(--bg-input);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-size: var(--fs-md);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* ── Toggle / checkbox ────────────────────────────────────────── */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  cursor: pointer;
+  min-height: 26px;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.toggle:hover {
+  color: var(--text);
+}
+.toggle input {
+  accent-color: var(--accent);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+/* ── Keyframe button ──────────────────────────────────────────── */
+.keyBtn {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--line-strong);
+  color: var(--text-faint);
+  font-size: 9px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.keyBtn:hover {
+  border-color: var(--mosh);
+  color: var(--mosh);
+}
+.keyBtnOn {
+  background: var(--mosh);
+  border-color: var(--mosh);
+  color: #0a0600;
+  box-shadow: 0 0 6px var(--mosh-glow);
+}
+
+/* ── Empty state ──────────────────────────────────────────────── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-faint);
+}
+.emptyTitle {
+  font-size: var(--fs-lg);
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.emptyHint {
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  max-width: 220px;
+}
+
+/* ── Modal ────────────────────────────────────────────────────── */
+.modalScrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  padding: 16px;
+  animation: fadeIn var(--dur-base) var(--ease-out);
+}
+.modal {
+  background: var(--bg-panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-xl);
+  width: 100%;
+  max-width: 440px;
+  max-height: 88dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  animation: slideUp var(--dur-slow) var(--ease-spring);
+}
+.modalHead {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: var(--text);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+}
+.modalBody {
+  padding: 14px 16px;
+  overflow-y: auto;
+}
+.modalFoot {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+}
+
+/* ── Status inline ────────────────────────────────────────────── */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: var(--fs-sm);
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-strong);
+  background: var(--bg-raised);
+}
+.statusError {
+  border-color: var(--danger-dim);
+  background: rgba(255, 77, 106, 0.06);
+  color: #ffc9d0;
+}
+.statusSuccess {
+  border-color: var(--ok-dim);
+  background: rgba(48, 212, 128, 0.06);
+  color: #b6f0cf;
+}
+.statusDetail {
+  margin-top: 6px;
+  padding: 8px;
+  background: #080b10;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  font-family: var(--mono);
+  font-size: 10px;
+  white-space: pre-wrap;
+  max-height: 140px;
+  overflow: auto;
+  color: var(--text-dim);
+}
+
+/* ── Progress bar ─────────────────────────────────────────────── */
+.progressTrack {
+  height: 5px;
+  background: var(--bg-input);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+  border-radius: var(--r-full);
+  transition: width 0.18s var(--ease-out);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.progressFillMosh {
+  background: linear-gradient(90deg, var(--mosh-dim), var(--mosh));
+  box-shadow: 0 0 8px var(--mosh-glow);
+}
+
+/* ── Chip ─────────────────────────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: var(--r-full);
+  background: var(--bg-raised);
+  border: 1px solid var(--line-strong);
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.chipMosh {
+  border-color: var(--mosh-dim);
+  background: rgba(255, 171, 31, 0.08);
+  color: var(--mosh);
+}

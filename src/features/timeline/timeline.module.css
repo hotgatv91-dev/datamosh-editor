@@ -1,0 +1,269 @@
+.timeline {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.toolbar::-webkit-scrollbar {
+  display: none;
+}
+.toolLabel {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 600;
+  margin-right: 4px;
+}
+.toolSep {
+  width: 1px;
+  height: 16px;
+  background: var(--line);
+  margin: 0 3px;
+  flex-shrink: 0;
+}
+.toolSpacer {
+  flex: 1;
+  min-width: 6px;
+}
+.zoomReadout {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  color: var(--text-faint);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+
+.canvas {
+  display: block;
+  touch-action: none;
+}
+
+.lanes {
+  position: relative;
+  border-top: 1px solid var(--line);
+}
+
+.lane {
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.3);
+  background: #0e1117;
+}
+.laneAlt {
+  background: #0b0e13;
+}
+.laneLabel {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 9px;
+  letter-spacing: 0.6px;
+  color: #444c56;
+  pointer-events: none;
+  user-select: none;
+}
+
+.selectionOverlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 171, 31, 0.08);
+  border-left: 1px dashed rgba(255, 171, 31, 0.55);
+  border-right: 1px dashed rgba(255, 171, 31, 0.55);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------- blocks */
+.block {
+  position: absolute;
+  height: 18px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  z-index: 2;
+  touch-action: none;
+  user-select: none;
+  overflow: hidden;
+  /*
+   * A one-frame block is a real thing to have, and at 8px it was impossible to
+   * grab. 26px is the same minimum the touch handles use, so a short block is
+   * always draggable. It may overhang its true end by a few pixels, which is a
+   * fair trade for being able to touch it at all.
+   */
+  min-width: 26px;
+}
+.blockMosh {
+  background: linear-gradient(180deg, #8a5f14 0%, #5a3c0a 100%);
+  border: 1px solid #d4971a;
+  color: #ffe4a0;
+  box-shadow: 0 0 0 1px rgba(255, 171, 31, 0.15), 0 1px 4px rgba(0,0,0,0.5);
+}
+.blockFx {
+  background: linear-gradient(180deg, #1f3d62 0%, #162e4a 100%);
+  border: 1px solid #3671be;
+  color: #c8deff;
+  box-shadow: 0 0 0 1px rgba(61,139,253,0.15), 0 1px 4px rgba(0,0,0,0.5);
+}
+.blockSelected {
+  outline: 2px solid rgba(255,255,255,0.9);
+  outline-offset: 0;
+  z-index: 3;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
+}
+.blockDisabled {
+  opacity: 0.42;
+  filter: grayscale(0.5);
+}
+
+.blockLabel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  min-width: 0;
+  pointer-events: none;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.blockGlyph {
+  font-size: 10px;
+}
+.blockText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.blockMeta {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+  font-family: var(--mono);
+}
+
+.handleLeft,
+.handleRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 22px;
+  cursor: ew-resize;
+  touch-action: none;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /*
+   * The grab area reaches past the edge of the block on the outside, so the
+   * handle is easy to hit without covering the drag body. The visible grip
+   * stays a thin bar (see ::after).
+   */
+}
+.handleLeft {
+  left: -8px;
+  justify-content: flex-end;
+  padding-right: 6px;
+}
+.handleRight {
+  right: -8px;
+  justify-content: flex-start;
+  padding-left: 6px;
+}
+/* Coarse pointers get the full 26px touch target the spec asks for. */
+@media (pointer: coarse) {
+  .handleLeft,
+  .handleRight {
+    width: 30px;
+  }
+  .handleLeft {
+    left: -12px;
+  }
+  .handleRight {
+    right: -12px;
+  }
+}
+.handleLeft::after,
+.handleRight::after {
+  content: '';
+  width: 2px;
+  height: 9px;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 1px;
+}
+.block:hover .handleLeft::after,
+.block:hover .handleRight::after,
+.blockSelected .handleLeft::after,
+.blockSelected .handleRight::after {
+  background: #fff;
+  height: 12px;
+}
+
+/*
+ * Snap guide: shown only while a block is actually snapped, so it reads as
+ * "you are on a mark" rather than as permanent decoration.
+ */
+.snapGuide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--mosh);
+  box-shadow: 0 0 6px rgba(255, 171, 31, 0.9);
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* ------------------------------------------------------------ overview */
+.overview {
+  flex-shrink: 0;
+  height: 14px;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+}
+.overviewTrack {
+  position: relative;
+  flex: 1;
+  height: 8px;
+  background: rgba(0,0,0,0.4);
+  border-radius: var(--r-full);
+  cursor: pointer;
+  touch-action: none;
+}
+.overviewThumb {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  min-width: 18px;
+  background: var(--line-strong);
+  border-radius: var(--r-full);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.overviewThumb:hover {
+  background: var(--text-faint);
+}

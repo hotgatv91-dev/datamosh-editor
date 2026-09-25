@@ -1,0 +1,148 @@
+/* Tool rail — vertical (desktop) and horizontal (mobile). */
+
+/* ── Vertical rail ────────────────────────────────────────────── */
+.tools {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 6px;
+  gap: 2px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tool {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: var(--r-md);
+  color: var(--text-dim);
+  font-size: var(--fs-md);
+  font-weight: 500;
+  text-align: left;
+  border: 1px solid transparent;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-spring);
+  position: relative;
+}
+.tool:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+  transform: translateX(2px);
+}
+.toolActive {
+  background: var(--bg-raised);
+  color: var(--text);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-sm);
+}
+.toolActive:hover {
+  transform: none;
+}
+
+/* Collapsed (icon-only) state */
+.toolCollapsed {
+  justify-content: center;
+  padding: 0;
+  height: 36px;
+}
+.toolCollapsed .toolGlyph {
+  width: auto;
+  font-size: 16px;
+}
+.toolCollapsed:hover {
+  transform: scale(1.1);
+}
+.toolCollapsed.toolActive:hover {
+  transform: none;
+}
+
+/* Glyphs */
+.toolGlyph {
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-faint);
+  transition: color var(--dur-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+.tool:hover .toolGlyph {
+  color: var(--text-dim);
+}
+.toolActive .toolGlyph {
+  color: var(--accent);
+}
+.toolMosh .toolGlyph {
+  color: var(--mosh);
+  font-size: 14px;
+}
+.toolMosh.toolActive {
+  border-color: var(--mosh-dim);
+  background: rgba(255, 171, 31, 0.06);
+  color: var(--mosh);
+}
+.toolMosh.toolActive .toolGlyph {
+  color: var(--mosh);
+  filter: drop-shadow(0 0 4px var(--mosh));
+}
+
+/* Active indicator line */
+.toolActive::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: var(--r-full);
+  background: var(--accent);
+}
+.toolMosh.toolActive::before {
+  background: var(--mosh);
+}
+
+/* ── Mobile tools (horizontal pills) ─────────────────────────── */
+.mobileTools {
+  display: flex;
+  gap: 5px;
+  padding: 6px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.mobileTools::-webkit-scrollbar {
+  display: none;
+}
+.mobileTool {
+  flex-shrink: 0;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.mobileTool:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+.mobileToolActive {
+  color: var(--text);
+  border-color: var(--accent);
+  background: rgba(61, 139, 253, 0.1);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.mobileToolMosh {
+  color: var(--mosh);
+  border-color: var(--mosh-dim);
+}
+.mobileToolMosh.mobileToolActive {
+  background: rgba(255, 171, 31, 0.1);
+  box-shadow: 0 0 8px var(--mosh-glow);
+}
