@@ -1,0 +1,141 @@
+.introScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: #050505;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  font-family: 'JetBrains Mono', monospace;
+  color: #fff;
+  /* VHS overlay color */
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+}
+
+.introHidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease-out;
+}
+
+/* CRT Scanlines */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.6;
+}
+
+/* TV Static Noise */
+.staticNoise {
+  position: absolute;
+  inset: -200%;
+  background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+  opacity: 0.08;
+  animation: noiseAnimation 0.2s infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes noiseAnimation {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -10%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-10%, 5%); }
+  60% { transform: translate(15%, 0); }
+  70% { transform: translate(0, 15%); }
+  80% { transform: translate(3%, 35%); }
+  90% { transform: translate(-10%, 10%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Vignette / CRT Tube shadow */
+.crtVignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 50%, rgba(0, 0, 0, 0.8) 100%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Text Container */
+.content {
+  position: relative;
+  z-index: 4;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.brand {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 
+    2px 0 0 red,
+    -2px 0 0 cyan;
+  animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  letter-spacing: 0.3em;
+  color: #ff3333;
+  animation: pulse 1.5s infinite;
+}
+
+.systemText {
+  font-size: 0.9rem;
+  color: #00ff00;
+  text-align: left;
+  max-width: 400px;
+  margin-top: 40px;
+  line-height: 1.6;
+  opacity: 0.8;
+  text-shadow: 0 0 5px rgba(0,255,0,0.5);
+}
+
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #00ff00;
+  width: 0;
+  animation: typing 2s steps(40, end) forwards, blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #00ff00; }
+}
+
+@keyframes glitch-anim {
+  0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 2px); }
+  20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
+  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, -1px); }
+  60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, 1px); }
+  80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, -2px); }
+  100% { clip-path: inset(30% 0 50% 0); transform: translate(1px, 2px); }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}

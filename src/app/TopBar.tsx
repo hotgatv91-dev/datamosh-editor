@@ -76,8 +76,8 @@ export function TopBar({ onOpenProjectPanel }: { onOpenProjectPanel: () => void 
     <header className={styles.topbar}>
       {/* Brand */}
       <div className={styles.brand}>
-        <span className={styles.brandMark}>⚡</span>
-        <span className={styles.brandName}>DATAMOSH</span>
+        <span className={styles.brandMark}>📺</span>
+        <span className={styles.brandName}>FZtechnology</span>
       </div>
 
       {/* Media import */}

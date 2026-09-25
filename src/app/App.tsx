@@ -24,6 +24,7 @@ import { Button, Modal } from '../ui/primitives';
 import { t } from '../i18n/strings';
 import { useKeyboardShortcuts } from '../hooks/useKeyboard';
 import { startPointerDrag } from '../features/timeline/drag';
+import { IntroScreen } from './IntroScreen';
 
 const TOOL_TITLES: Record<string, string> = {
   media: t.media,
@@ -230,6 +231,8 @@ function AppShell() {
           </div>
         </div>
       ) : null}
+
+      <IntroScreen />
     </div>
   );
 }
