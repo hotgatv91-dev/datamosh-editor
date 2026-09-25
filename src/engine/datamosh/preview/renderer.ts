@@ -289,7 +289,13 @@ export class DatamoshPreviewRenderer {
         }
 
         this.applyMvAdjust(lane, motionInfo.texture, motionInfo.previousTexture, state.mvAdj, input);
-        this.applyWarp(output, srcPrev, read, state.mvAdj.texture, write, lane, motionInfo);
+        this.applyWarp(output, srcPrev, read, state.mvAdj.texture, write, lane, {
+          radius: motionInfo.radius,
+          gridWidth: motionInfo.gridWidth,
+          gridHeight: motionInfo.gridHeight,
+          lumaWidth: motionInfo.lumaWidth,
+          lumaHeight: motionInfo.lumaHeight,
+        });
 
         output = write.texture;
         state.toggle = !state.toggle;
@@ -389,43 +395,59 @@ export class DatamoshPreviewRenderer {
     mv: WebGLTexture,
     target: RenderTarget,
     lane: ResolvedEffect,
-    motionInfo: { radius: number; gridWidth: number; gridHeight: number },
+    motionInfo: { radius: number; gridWidth: number; gridHeight: number; lumaWidth: number; lumaHeight: number },
   ): void {
     const gl = this.gl!;
     const program = this.programs!.warp;
     const params = lane.params;
     const envelope = lane.envelope;
 
-    const persistence = (numParam(params, 'persistence', 45) / 100) * envelope;
-    const decay = numParam(params, 'decay', 12) / 100;
-    const smearLength = numParam(params, 'smearLength', 40) / 100;
+    const persistence   = (numParam(params, 'persistence', 45) / 100) * envelope;
+    const decay         = numParam(params, 'decay', 12) / 100;
+    const smearLength   = numParam(params, 'smearLength', 40) / 100;
     const frameInfluence = numParam(params, 'frameInfluence', 45) / 100;
-    const temporalOffset = numParam(params, 'temporalOffset', 2);
-    const stretch = numParam(params, 'stretch', 40) / 100;
-    const freeze = numParam(params, 'freezeDuration', 0);
+    const stretch       = numParam(params, 'stretch', 40) / 100;
+    const freeze        = numParam(params, 'freezeDuration', 0);
+    const regionOffset  = lane.frameOffset;
 
-    const weight = Math.min(0.97, Math.max(0, persistence * (1 - decay * 0.35)));
-    const warpScale = 1 + smearLength * 4 + temporalOffset * 0.2 + stretch * 2;
-    const regionOffset = lane.frameOffset;
-    const decayFactor = Math.pow(Math.max(0, 1 - decay), Math.min(240, regionOffset));
+    // --- weight: how much of the ghost replaces the clean frame ---------------
+    // persistence controls the strength; decay reduces it multiplicatively.
+    const weight = Math.min(0.97, Math.max(0, persistence * (1 - decay * 0.5)));
+
+    // --- warpScale: how far we shift along the motion vector ------------------
+    // 1.0  = natural: the ghost follows exactly where motion says things went.
+    // > 1  = stretch: the ghost is pulled further (smear/exaggerate effect).
+    // smearLength amplifies the warp; stretch adds extra directional pull.
+    // Both are already in [0,1] (from 0-100% UI), so their contribution is linear.
+    const warpScale = 1.0 + smearLength * 3.0 + stretch * 1.5;
+
+    // --- decayFactor: per-frame exponential falloff of the accum buffer --------
+    // This is the factor applied ONCE per frame to the accumulated ghost.
+    // (1 - decay) keeps most of the history; small decay = long tail.
+    // Do NOT raise this to the power of regionOffset — that would make the
+    // effect disappear within a few frames.
+    const decayFactor = Math.max(0, 1.0 - decay);
+
     const freezeBoost = freeze > 0 && regionOffset < freeze ? 1 : 0;
 
-    // Motion vectors are in luma texels; convert to uv by dividing by the
-    // motion grid resolution (one texel per block).
-    const texelX = motionInfo.gridWidth > 0 ? 1 / motionInfo.gridWidth : 0;
-    const texelY = motionInfo.gridHeight > 0 ? 1 / motionInfo.gridHeight : 0;
+    // uTexel: convert a 1-pixel MV displacement in *luma* space → UV fraction.
+    // The MV is stored in luma-texel units, so we divide by luma resolution.
+    const lumaW = Math.max(1, motionInfo.lumaWidth);
+    const lumaH = Math.max(1, motionInfo.lumaHeight);
+    const texelX = 1.0 / lumaW;
+    const texelY = 1.0 / lumaH;
 
     gl.useProgram(program.program);
-    bindTexture(gl, 0, current, program.uniforms.uCur);
-    bindTexture(gl, 1, previousFrame, program.uniforms.uPrev);
-    bindTexture(gl, 2, accumRead.texture, program.uniforms.uAccum);
-    bindTexture(gl, 3, mv, program.uniforms.uMv);
+    bindTexture(gl, 0, current,             program.uniforms.uCur);
+    bindTexture(gl, 1, previousFrame,       program.uniforms.uPrev);
+    bindTexture(gl, 2, accumRead.texture,   program.uniforms.uAccum);
+    bindTexture(gl, 3, mv,                  program.uniforms.uMv);
     gl.uniform2f(program.uniforms.uTexel, texelX, texelY);
-    gl.uniform1f(program.uniforms.uRadius, motionInfo.radius);
-    gl.uniform1f(program.uniforms.uWarpScale, warpScale);
-    gl.uniform1f(program.uniforms.uSmear, Math.max(frameInfluence, freezeBoost));
-    gl.uniform1f(program.uniforms.uWeight, freezeBoost ? Math.max(weight, 0.9) : weight);
-    gl.uniform1f(program.uniforms.uDecayFactor, freezeBoost ? 1 : decayFactor);
+    gl.uniform1f(program.uniforms.uRadius,      motionInfo.radius);
+    gl.uniform1f(program.uniforms.uWarpScale,   freezeBoost ? 0.0 : warpScale);
+    gl.uniform1f(program.uniforms.uSmear,       Math.max(frameInfluence, freezeBoost ? 1.0 : 0.0));
+    gl.uniform1f(program.uniforms.uWeight,      freezeBoost ? Math.max(weight, 0.95) : weight);
+    gl.uniform1f(program.uniforms.uDecayFactor, freezeBoost ? 1.0 : decayFactor);
     drawFullscreen(gl, target);
   }
 

@@ -151,22 +151,32 @@ uniform sampler2D uCur;
 uniform sampler2D uPrev;
 uniform sampler2D uAccum;
 uniform sampler2D uMv;
-uniform vec2 uTexel;
+uniform vec2 uTexel;        // 1 / (renderWidth, renderHeight) — pixel UV step
 uniform float uRadius;
-uniform float uWarpScale;
-uniform float uSmear;
-uniform float uWeight;
-uniform float uDecayFactor;
+uniform float uWarpScale;   // amplification of the decoded MV (1 = natural movement)
+uniform float uSmear;       // mix between accum and prev-frame ghost
+uniform float uWeight;      // overall ghost opacity (persistence × (1-decay))
+uniform float uDecayFactor; // per-frame multiplier on the accum buffer
 
 void main() {
   vec3 cur = texture(uCur, vUv).rgb;
-  vec2 mv = (texture(uMv, vUv).rg - 0.5) * 2.0 * max(1.0, uRadius) * uTexel;
-  vec2 warped = clamp(vUv + mv * uWarpScale, vec2(0.0), vec2(1.0));
 
+  // Decode the MV from [0,1] RG storage into luma-texel space, then convert
+  // to UV space (divide by radius*2 cancels the encoding, multiply by texel
+  // gives the actual UV displacement for one luma pixel).
+  vec2 mvLuma = (texture(uMv, vUv).rg - 0.5) * 2.0 * max(1.0, uRadius);
+  // uTexel here is 1/lumaResolution, so mvLuma*uTexel → UV displacement.
+  vec2 mv = mvLuma * uTexel * uWarpScale;
+  vec2 warped = clamp(vUv + mv, vec2(0.0), vec2(1.0));
+
+  // Accumulation: sample the rolling ghost buffer and the previous raw frame
+  // from the warped UV, then exponentially decay the accum.
   vec3 ghostAccum = texture(uAccum, warped).rgb * uDecayFactor;
-  vec3 ghostPrev = texture(uPrev, warped).rgb;
+  vec3 ghostPrev  = texture(uPrev,  warped).rgb;
+  // uSmear: 0 = pure accumulation tail, 1 = direct previous-frame ghost.
   vec3 ghost = mix(ghostAccum, ghostPrev, clamp(uSmear, 0.0, 1.0));
 
+  // Final composite: current clean frame + ghost at the effect weight.
   vec3 rgb = mix(cur, ghost, clamp(uWeight, 0.0, 1.0));
   outColor = vec4(rgb, 1.0);
 }`;
