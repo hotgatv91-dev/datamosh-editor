@@ -42,7 +42,7 @@
   position: absolute;
   inset: -200%;
   background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-  opacity: 0.15;
+  opacity: 0.08; /* Reduced noise opacity by 30-40% */
   animation: noiseAnimation 0.1s infinite;
   pointer-events: none;
   z-index: 1;
@@ -93,10 +93,11 @@
   justify-content: space-between;
   align-items: flex-end;
 }
-.playText {
+.recText {
+  color: #ff3333;
   animation: blink 1s infinite;
 }
-.dateText, .timecode, .spText {
+.dateText, .timecode {
   color: #fff;
 }
 
@@ -187,7 +188,7 @@
   border-right: 2px solid #ccc;
   width: 0;
   margin-bottom: 5px;
-  animation: typing 2s steps(40, end) forwards, blink-caret .75s step-end infinite;
+  animation: typing 1.5s steps(30, end) forwards, blink-caret .75s step-end infinite;
 }
 
 @keyframes typing {
@@ -224,14 +225,14 @@
 }
 
 .startBtn {
-  margin-top: 40px;
-  padding: 12px 24px;
+  margin-top: 50px;
+  padding: 8px 16px;
   background: transparent;
   color: #fff;
   font-family: inherit;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
-  border: 2px solid #fff;
+  border: 1px solid #fff;
   cursor: pointer;
   letter-spacing: 0.1em;
   transition: all 0.2s;
@@ -244,7 +245,7 @@
 }
 
 .glitchOut {
-  animation: explode 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: explode 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 @keyframes explode {

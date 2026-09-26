@@ -81,21 +81,20 @@
   flex: 1;
   min-width: 6px;
 }
-.projectName {
+.projectNameInput {
+  font-family: var(--font);
   font-size: var(--fs-sm);
-  color: var(--text-faint);
-  max-width: 240px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex-shrink: 0;
-  padding: 0 6px;
-  height: 22px;
-  display: flex;
-  align-items: center;
+  color: var(--text);
+  width: 140px;
+  padding: 4px 8px;
   background: var(--bg-input);
   border: 1px solid var(--line);
   border-radius: var(--r-sm);
+  outline: none;
+  transition: border-color var(--dur-fast) ease;
+}
+.projectNameInput:focus {
+  border-color: var(--cyan);
 }
 .hidden {
   display: none;

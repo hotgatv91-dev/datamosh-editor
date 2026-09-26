@@ -333,6 +333,9 @@ export function PreviewSurface() {
         />
         {hasVideo ? null : (
           <div className={styles.stageEmpty}>
+            <div className={styles.avatarGlitchWrap}>
+              <img src={`${import.meta.env.BASE_URL}avatar.png`} alt="Avatar Glitch" className={styles.avatarGlitch} />
+            </div>
             <Empty title={t.importVideo} hint={t.dropHere} />
           </div>
         )}

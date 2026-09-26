@@ -76,14 +76,19 @@ export function TopBar({ onOpenProjectPanel }: { onOpenProjectPanel: () => void 
     <header className={styles.topbar}>
       {/* Brand */}
       <div className={styles.brand}>
-        <span className={styles.brandMark}>▣</span>
         <span className={styles.brandName}>FZtechnology</span>
       </div>
 
       {/* Project meta */}
-      <span className={styles.projectName} title={project.name}>
-        {project.name || "Untitled Project"}
-      </span>
+      <input
+        className={styles.projectNameInput}
+        value={project.name || ''}
+        placeholder="Untitled Project"
+        onChange={(e) => {
+          // Just as a visual for now or implement rename logic later
+        }}
+        title="Project Name"
+      />
 
       <div className={styles.topbarSep} />
 
@@ -155,24 +160,6 @@ export function TopBar({ onOpenProjectPanel }: { onOpenProjectPanel: () => void 
       </Button>
 
       <div className={styles.spacer} />
-
-      {/* Layout toggles - moved to right */}
-      <Button
-        variant="ghost"
-        className={clsx(leftCollapsed && styles.toggleActive)}
-        onClick={() => setUi({ leftCollapsed: !leftCollapsed })}
-        title={leftCollapsed ? t.showToolColumn : t.hideToolColumn}
-      >
-        ◧
-      </Button>
-      <Button
-        variant="ghost"
-        className={clsx(rightCollapsed && styles.toggleActive)}
-        onClick={() => setUi({ rightCollapsed: !rightCollapsed })}
-        title={rightCollapsed ? t.showInspector : t.hideInspector}
-      >
-        ◨
-      </Button>
 
       {/* Export */}
       <Button variant="primary" onClick={() => setUi({ exportOpen: true })}>
