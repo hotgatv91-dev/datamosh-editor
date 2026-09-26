@@ -2,16 +2,16 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background-color: #050505;
+  background-color: #030303;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Courier New', Courier, monospace;
   color: #fff;
   /* VHS overlay color */
-  box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+  box-shadow: inset 0 0 150px rgba(0,0,0,1);
 }
 
 .introHidden {
@@ -25,13 +25,16 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%,
-    rgba(0, 0, 0, 0.25) 50%
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0) 50%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.2)
   );
   background-size: 100% 4px;
   pointer-events: none;
   z-index: 2;
-  opacity: 0.6;
+  opacity: 0.8;
 }
 
 /* TV Static Noise */
@@ -39,8 +42,8 @@
   position: absolute;
   inset: -200%;
   background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-  opacity: 0.08;
-  animation: noiseAnimation 0.2s infinite;
+  opacity: 0.15;
+  animation: noiseAnimation 0.1s infinite;
   pointer-events: none;
   z-index: 1;
 }
@@ -63,9 +66,43 @@
 .crtVignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle, transparent 50%, rgba(0, 0, 0, 0.8) 100%);
+  background: radial-gradient(circle, transparent 50%, rgba(0, 0, 0, 0.9) 100%);
   pointer-events: none;
   z-index: 3;
+}
+
+/* VCR UI Overlays */
+.vcrUI {
+  position: absolute;
+  inset: 5%;
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-shadow: 2px 2px 0px rgba(0,0,0,1);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.vcrTop {
+  display: flex;
+  justify-content: space-between;
+}
+.vcrBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.playText {
+  animation: blink 1s infinite;
+}
+.dateText, .timecode, .spText {
+  color: #fff;
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
 /* Text Container */
@@ -78,41 +115,78 @@
   gap: 20px;
 }
 
+.brandContainer {
+  position: relative;
+}
+
 .brand {
   font-size: 4rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #fff;
   text-shadow: 
-    2px 0 0 red,
-    -2px 0 0 cyan;
-  animation: glitch-anim 2s infinite linear alternate-reverse;
+    3px 0 0 rgba(255,0,0,0.8),
+    -3px 0 0 rgba(0,255,255,0.8);
+  animation: glitch-anim 0.3s infinite linear alternate-reverse;
+  position: relative;
+}
+
+.brand::before, .brand::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.brand::before {
+  left: 2px;
+  text-shadow: -2px 0 red;
+  clip-path: inset(20% 0 80% 0);
+  animation: glitch-anim-2 2s infinite linear alternate-reverse;
+}
+.brand::after {
+  left: -2px;
+  text-shadow: -2px 0 cyan;
+  clip-path: inset(80% 0 5% 0);
+  animation: glitch-anim 1.5s infinite linear alternate-reverse;
 }
 
 .subtitle {
   font-size: 1.2rem;
-  letter-spacing: 0.3em;
-  color: #ff3333;
-  animation: pulse 1.5s infinite;
+  letter-spacing: 0.15em;
+  color: #aaa;
 }
 
 .systemText {
-  font-size: 0.9rem;
-  color: #00ff00;
+  font-size: 1rem;
+  color: #ccc;
   text-align: left;
-  max-width: 400px;
-  margin-top: 40px;
+  max-width: 450px;
+  margin: 40px auto 0;
   line-height: 1.6;
-  opacity: 0.8;
-  text-shadow: 0 0 5px rgba(0,255,0,0.5);
+  opacity: 0.9;
+}
+
+.warningBox {
+  border: 2px solid #ff3333;
+  color: #ff3333;
+  padding: 8px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 10px rgba(255,0,0,0.5);
+  background: rgba(255,0,0,0.1);
 }
 
 .typewriter {
   overflow: hidden;
   white-space: nowrap;
-  border-right: 2px solid #00ff00;
+  border-right: 2px solid #ccc;
   width: 0;
+  margin-bottom: 5px;
   animation: typing 2s steps(40, end) forwards, blink-caret .75s step-end infinite;
 }
 
@@ -122,20 +196,29 @@
 }
 @keyframes blink-caret {
   from, to { border-color: transparent }
-  50% { border-color: #00ff00; }
+  50% { border-color: #ccc; }
 }
 
 @keyframes glitch-anim {
-  0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 2px); }
-  20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
-  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, -1px); }
-  60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, 1px); }
-  80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, -2px); }
-  100% { clip-path: inset(30% 0 50% 0); transform: translate(1px, 2px); }
+  0% { transform: translate(-2px, 1px); }
+  20% { transform: translate(2px, -1px); }
+  40% { transform: translate(-1px, 2px); }
+  60% { transform: translate(1px, -2px); }
+  80% { transform: translate(-2px, -1px); }
+  100% { transform: translate(2px, 1px); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip-path: inset(10% 0 60% 0); }
+  20% { clip-path: inset(80% 0 5% 0); }
+  40% { clip-path: inset(40% 0 30% 0); }
+  60% { clip-path: inset(70% 0 10% 0); }
+  80% { clip-path: inset(20% 0 50% 0); }
+  100% { clip-path: inset(50% 0 30% 0); }
 }
 
 @keyframes pulse {
   0% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0.6; }
   100% { opacity: 1; }
 }

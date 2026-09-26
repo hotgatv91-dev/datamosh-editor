@@ -6,10 +6,10 @@ export function IntroScreen() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    // Dismiss automatically after 4 seconds
+    // Dismiss automatically after 4.5 seconds for dramatic effect
     const timer = setTimeout(() => {
       setVisible(false);
-    }, 4000);
+    }, 4500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -21,14 +21,30 @@ export function IntroScreen() {
       <div className={styles.scanlines} />
       <div className={styles.crtVignette} />
       
+      <div className={styles.vcrUI}>
+        <div className={styles.vcrTop}>
+          <span className={styles.playText}>▶ PLAY</span>
+          <span className={styles.spText}>SP</span>
+        </div>
+        <div className={styles.vcrBottom}>
+          <span className={styles.dateText}>SEP 26</span>
+          <span className={styles.timecode}>00:00:14:08</span>
+        </div>
+      </div>
+
       <div className={styles.content}>
-        <div className={styles.brand}>FZtechnology</div>
-        <div className={styles.subtitle}>FZnetwork presents</div>
+        <div className={styles.brandContainer}>
+          <div className={styles.brand} data-text="FZ NETWORK">FZ NETWORK</div>
+        </div>
+        <div className={styles.subtitle}>// ARCHIVE.RECORD.R3P0RT //</div>
         
         <div className={styles.systemText}>
-          <div className={styles.typewriter}>INITIALIZING SYSTEM_</div>
-          <div className={styles.typewriter} style={{ animationDelay: '1s' }}>LOADING PROTOCOLS... OK</div>
-          <div className={styles.typewriter} style={{ animationDelay: '2s' }}>AWAITING INPUT</div>
+          <div className={styles.warningBox}>
+            WARNING: VIEWING COMPROMISED TAPE
+          </div>
+          <div className={styles.typewriter}>LOADING ABNORMALITY PROTOCOLS...</div>
+          <div className={styles.typewriter} style={{ animationDelay: '1s' }}>MOKI.DAT ... FOUND</div>
+          <div className={styles.typewriter} style={{ animationDelay: '2.5s', color: 'red' }}>SIGNAL LOST.</div>
         </div>
       </div>
     </div>
