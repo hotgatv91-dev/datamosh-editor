@@ -10,6 +10,7 @@ const isolationHeaders = {
 };
 
 export default defineConfig({
+  base: '/datamosh-editor/',
   plugins: [react()],
   optimizeDeps: {
     // @ffmpeg/ffmpeg spawns its own module worker and @ffmpeg/core resolves its
