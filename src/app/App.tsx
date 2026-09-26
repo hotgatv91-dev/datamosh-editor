@@ -232,6 +232,12 @@ function AppShell() {
         </div>
       ) : null}
 
+      {/* Global CRT overlay for the Analog Horror vibe */}
+      <div className={styles.globalCrt}>
+        <div className={styles.globalScanlines} />
+        <div className={styles.globalVignette} />
+      </div>
+
       <IntroScreen />
     </div>
   );
