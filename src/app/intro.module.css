@@ -222,3 +222,46 @@
   50% { opacity: 0.6; }
   100% { opacity: 1; }
 }
+
+.startBtn {
+  margin-top: 40px;
+  padding: 12px 24px;
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 2px solid #fff;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: all 0.2s;
+}
+
+.startBtn:hover {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+}
+
+.glitchOut {
+  animation: explode 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes explode {
+  0% {
+    filter: invert(0) brightness(1) contrast(1) hue-rotate(0deg);
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    filter: invert(1) brightness(2) contrast(3) hue-rotate(90deg);
+    transform: scale(1.05) skewX(10deg);
+    opacity: 0.8;
+  }
+  100% {
+    filter: invert(0) brightness(10) contrast(10);
+    transform: scale(1.5) skewX(-20deg);
+    opacity: 0;
+  }
+}
+

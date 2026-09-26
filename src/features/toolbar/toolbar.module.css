@@ -142,7 +142,25 @@
   color: var(--mosh);
   border-color: var(--mosh-dim);
 }
-.mobileToolMosh.mobileToolActive {
+.toolMosh.mobileToolActive {
   background: rgba(255, 171, 31, 0.1);
   box-shadow: 0 0 8px var(--mosh-glow);
+}
+
+/* ── Tool Groups ──────────────────────────────────────────────── */
+.toolGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+.toolGroupTitle {
+  font-size: var(--fs-xs);
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 10px 4px;
+  margin-top: 4px;
+  font-weight: 600;
 }

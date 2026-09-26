@@ -1,22 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 import styles from './intro.module.css';
 
 export function IntroScreen() {
   const [visible, setVisible] = useState(true);
+  const [started, setStarted] = useState(false);
 
-  useEffect(() => {
-    // Dismiss automatically after 4.5 seconds for dramatic effect
-    const timer = setTimeout(() => {
+  const handleStart = () => {
+    setStarted(true);
+    // Give it a brief glitch out before unmounting
+    setTimeout(() => {
       setVisible(false);
-    }, 4500);
-    return () => clearTimeout(timer);
-  }, []);
+    }, 400);
+  };
 
   if (!visible) return null;
 
   return (
-    <div className={clsx(styles.introScreen)} onClick={() => setVisible(false)}>
+    <div className={clsx(styles.introScreen, started && styles.glitchOut)}>
       <div className={styles.staticNoise} />
       <div className={styles.scanlines} />
       <div className={styles.crtVignette} />
@@ -43,9 +44,11 @@ export function IntroScreen() {
             WARNING: VIEWING COMPROMISED TAPE
           </div>
           <div className={styles.typewriter}>LOADING ABNORMALITY PROTOCOLS...</div>
-          <div className={styles.typewriter} style={{ animationDelay: '1s' }}>MOKI.DAT ... FOUND</div>
-          <div className={styles.typewriter} style={{ animationDelay: '2.5s', color: 'red' }}>SIGNAL LOST.</div>
         </div>
+
+        <button className={styles.startBtn} onClick={handleStart}>
+          INITIATE SYSTEM
+        </button>
       </div>
     </div>
   );

@@ -76,13 +76,20 @@ export function TopBar({ onOpenProjectPanel }: { onOpenProjectPanel: () => void 
     <header className={styles.topbar}>
       {/* Brand */}
       <div className={styles.brand}>
-        <span className={styles.brandMark}>📺</span>
+        <span className={styles.brandMark}>▣</span>
         <span className={styles.brandName}>FZtechnology</span>
       </div>
 
+      {/* Project meta */}
+      <span className={styles.projectName} title={project.name}>
+        {project.name || "Untitled Project"}
+      </span>
+
+      <div className={styles.topbarSep} />
+
       {/* Media import */}
-      <Button onClick={() => inputRef.current?.click()} title="Nhập file video (Ctrl+O)">
-        📥 {t.import}
+      <Button variant="ghost" onClick={() => inputRef.current?.click()} title="Nhập file video (Ctrl+O)">
+        Import
       </Button>
       <input
         ref={inputRef}
@@ -92,8 +99,6 @@ export function TopBar({ onOpenProjectPanel }: { onOpenProjectPanel: () => void 
         onChange={(event) => void onFiles(event.target.files)}
       />
 
-      <div className={styles.topbarSep} />
-
       {/* History */}
       <Button
         onClick={undo}
@@ -101,7 +106,7 @@ export function TopBar({ onOpenProjectPanel }: { onOpenProjectPanel: () => void 
         title={`${t.undo} (Ctrl+Z)`}
         variant="ghost"
       >
-        ↩ Undo
+        Undo
       </Button>
       <Button
         onClick={redo}
@@ -109,10 +114,8 @@ export function TopBar({ onOpenProjectPanel }: { onOpenProjectPanel: () => void 
         title={`${t.redo} (Ctrl+Shift+Z)`}
         variant="ghost"
       >
-        ↪ Redo
+        Redo
       </Button>
-
-      <div className={styles.topbarSep} />
 
       {/* Project file actions */}
       <Button
@@ -123,10 +126,10 @@ export function TopBar({ onOpenProjectPanel }: { onOpenProjectPanel: () => void 
         title={`${t.save} (Ctrl+S)`}
         variant="ghost"
       >
-        💾 {t.save}
+        Save
       </Button>
       <Button onClick={() => projectInputRef.current?.click()} title={t.load} variant="ghost">
-        📂 {t.load}
+        Load
       </Button>
       <input
         ref={projectInputRef}
@@ -148,27 +151,12 @@ export function TopBar({ onOpenProjectPanel }: { onOpenProjectPanel: () => void 
         }}
         title="Khôi phục lần lưu tự động gần nhất"
       >
-        🔄 Autosave
-      </Button>
-      <Button
-        variant="ghost"
-        onClick={() => {
-          if (!project.clips.length && !project.effects.length) {
-            useEditor.getState().newProject();
-            return;
-          }
-          if (window.confirm(t.newProjectConfirm)) {
-            useEditor.getState().newProject();
-          }
-        }}
-        title={t.newProject}
-      >
-        ✨ {t.newProject}
+        Autosave
       </Button>
 
-      <div className={styles.topbarSep} />
+      <div className={styles.spacer} />
 
-      {/* Layout toggles */}
+      {/* Layout toggles - moved to right */}
       <Button
         variant="ghost"
         className={clsx(leftCollapsed && styles.toggleActive)}
@@ -186,14 +174,9 @@ export function TopBar({ onOpenProjectPanel }: { onOpenProjectPanel: () => void 
         ◨
       </Button>
 
-      <div className={styles.spacer} />
-
-      {/* Project meta + export */}
-      <span className={styles.projectName} title={project.name}>
-        {project.name} · {project.fps} fps
-      </span>
+      {/* Export */}
       <Button variant="primary" onClick={() => setUi({ exportOpen: true })}>
-        🚀 {t.exportTitle}
+        Export
       </Button>
     </header>
   );

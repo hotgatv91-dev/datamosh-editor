@@ -1,72 +1,74 @@
-/* Design tokens — Premium Analog Horror / Glitch UI.
-   Deep blacks, stark contrast, neon red accents, and monospace typography. */
+/* Design tokens — Professional Video Editor Aesthetic.
+   Deep dark backgrounds, cyan/magenta accents, clean typography. */
 
 :root {
   /* ── Surfaces ────────────────────────────────────────────── */
-  --bg-app: #030303;
-  --bg-panel: #0a0a0a;
-  --bg-raised: #121212;
+  --bg-app: #090909;      /* Main background */
+  --bg-panel: #101010;    /* Left/Right panels, Timeline */
+  --bg-raised: #181818;   /* Raised elements, inputs */
   --bg-input: #000000;
-  --bg-hover: #1a1a1a;
-  --bg-active: #242424;
-  --bg-glass: rgba(10, 10, 10, 0.9);
+  --bg-hover: #222222;
+  --bg-active: #2a2a2a;
+  --bg-glass: rgba(16, 16, 16, 0.9);
 
   /* ── Borders ─────────────────────────────────────────────── */
   --line: #222222;
   --line-strong: #333333;
-  --line-glow: rgba(255, 0, 60, 0.3);
+  --line-glow: rgba(0, 255, 255, 0.2);
 
   /* ── Text ────────────────────────────────────────────────── */
-  --text: #e0e0e0;
-  --text-dim: #888888;
+  --text: #eaeaea;        /* Main text */
+  --text-dim: #777777;    /* Secondary text */
   --text-faint: #444444;
 
-  /* ── Accent / brand (Glitch Red) ─────────────────────────── */
-  --accent: #ff003c;
-  --accent-dim: #660018;
-  --accent-glow: rgba(255, 0, 60, 0.4);
-  --accent-bright: #ff4d79;
+  /* ── Accent / brand (Cyan/Magenta) ───────────────────────── */
+  --accent: #00e5ff;      /* Primary Accent: Cyan */
+  --accent-dim: #005966;
+  --accent-glow: rgba(0, 229, 255, 0.4);
+  --accent-bright: #66efff;
+  
+  --accent2: #ff00ff;     /* Secondary Accent: Magenta */
 
-  /* ── Datamosh (Toxic Green / Cyan) ───────────────────────── */
-  --mosh: #00ffcc;
-  --mosh-dim: #004d3d;
-  --mosh-glow: rgba(0, 255, 204, 0.3);
-  --mosh-bright: #66ffeb;
+  /* ── Datamosh (Specific Color) ───────────────────────────── */
+  --mosh: #ff00ff;        /* Re-map datamosh to Magenta for contrast */
+  --mosh-dim: #660066;
+  --mosh-glow: rgba(255, 0, 255, 0.3);
+  --mosh-bright: #ff66ff;
 
   /* ── State ───────────────────────────────────────────────── */
-  --danger: #ff003c;
-  --danger-dim: #660018;
+  --danger: #ff3366;
+  --danger-dim: #661429;
   --ok: #00ffcc;
   --ok-dim: #004d3d;
   --info: #00e5ff;
 
   /* ── Radii ───────────────────────────────────────────────── */
-  --r-xs: 0px;  /* Sharp edges for analog feel */
-  --r-sm: 0px;
-  --r-md: 2px;
-  --r-lg: 4px;
-  --r-xl: 6px;
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
+  --r-xl: 12px;
   --r-full: 9999px;
 
   /* ── Type scale ──────────────────────────────────────────── */
-  --fs-xs: 10px;
-  --fs-sm: 11px;
-  --fs-md: 12px;
-  --fs-lg: 13px;
-  --fs-xl: 14px;
-  --fs-2xl: 16px;
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-md: 13px;
+  --fs-lg: 14px;
+  --fs-xl: 16px;
+  --fs-2xl: 18px;
 
   /* ── Layout ──────────────────────────────────────────────── */
   --h-topbar: 52px;
   --h-transport: 48px;
   --w-toolbar: 240px;
-  --w-inspector: 320px;
-  --hit: 32px;
+  --w-inspector: 280px; /* Reduced from 320 to give preview more space */
+  --hit: 36px; /* Increased base hit area */
 
   /* ── Shadows ─────────────────────────────────────────────── */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.8);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.9);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,1);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.6);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.8);
   --shadow-accent: 0 0 0 1px var(--accent-dim), 0 4px 16px var(--accent-glow);
   --shadow-mosh: 0 0 0 1px var(--mosh-dim), 0 4px 16px var(--mosh-glow);
 
@@ -78,7 +80,8 @@
   --dur-slow: 250ms;
 
   /* ── Fonts ───────────────────────────────────────────────── */
-  --font: 'Courier New', Courier, monospace;
-  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  /* Modern clean fonts */
+  --font: 'Inter', 'Geist', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace;
 }
 

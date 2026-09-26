@@ -24,15 +24,75 @@ import { Button, Empty, Panel, RangeField } from '../../ui/primitives';
 import { MediaPanel } from '../media/MediaPanel';
 import * as ops from '../../engine/timeline/ops';
 
-const TOOLS: { id: ToolId; label: string; glyph: string; hint: string; mosh?: boolean }[] = [
-  { id: 'media', label: t.media, glyph: '▤', hint: 'Import và quản lý video' },
-  { id: 'edit', label: t.edit, glyph: '✂', hint: 'Trim, split, xoá, duplicate' },
-  { id: 'effects', label: t.effects, glyph: '✦', hint: 'Glitch, RGB split, VHS…' },
-  { id: 'datamosh', label: t.datamosh, glyph: '⚡', hint: 'Datamosh thật: motion vector + I-frame', mosh: true },
-  { id: 'speed', label: t.speed, glyph: '⏱', hint: 'Tốc độ phát và time warp' },
-  { id: 'adjust', label: t.adjust, glyph: '◐', hint: 'Màu sắc, độ sáng, tương phản' },
-  { id: 'audio', label: t.audio, glyph: '♪', hint: 'Volume, mute, fade' },
+interface ToolItem {
+  id: string;
+  label: string;
+  glyph: string;
+  hint: string;
+  mosh?: boolean;
+}
+
+interface ToolGroup {
+  title: string;
+  items: ToolItem[];
+}
+
+const TOOL_GROUPS: ToolGroup[] = [
+  {
+    title: 'MEDIA',
+    items: [
+      { id: 'media', label: 'Import', glyph: '📁', hint: 'Import và quản lý video' },
+    ]
+  },
+  {
+    title: 'EDIT',
+    items: [
+      { id: 'edit', label: 'Tools', glyph: '✂', hint: 'Trim, split, xoá, duplicate' },
+    ]
+  },
+  {
+    title: 'EFFECTS',
+    items: [
+      { id: 'effects', label: 'Basic FX', glyph: '✦', hint: 'Glitch, RGB split, VHS…' },
+      { id: 'datamosh', label: 'Datamosh', glyph: '◈', hint: 'Datamosh thật: motion vector + I-frame', mosh: true },
+      { id: 'speed', label: 'Speed', glyph: '⟳', hint: 'Tốc độ phát và time warp' },
+    ]
+  },
+  {
+    title: 'ADJUST',
+    items: [
+      { id: 'adjust', label: 'Color', glyph: '◐', hint: 'Màu sắc, độ sáng, tương phản' },
+      { id: 'audio', label: 'Audio', glyph: '◉', hint: 'Volume, mute, fade' },
+    ]
+  }
 ];
+
+function getPresetVisual(id: string) {
+  // Return different emoji/text art based on the preset ID
+  switch (id) {
+    case 'classic': return <span style={{ fontSize: 24, filter: 'hue-rotate(90deg)' }}>🌈</span>;
+    case 'motion-stretch': return <span style={{ fontSize: 24, letterSpacing: '4px' }}>👉🏻👉🏻</span>;
+    case 'motion-smear': return <span style={{ fontSize: 24, filter: 'blur(2px)' }}>🌪️</span>;
+    case 'slow-motion': return <span style={{ fontSize: 24 }}>🐌</span>;
+    case 'frame-hold': return <span style={{ fontSize: 24 }}>⏸️</span>;
+    case 'frame-repeat': return <span style={{ fontSize: 24 }}>🔁</span>;
+    case 'frame-skip': return <span style={{ fontSize: 24, letterSpacing: '8px' }}>⚡️⚡️</span>;
+    case 'frame-melt': return <span style={{ fontSize: 24, filter: 'drop-shadow(0 4px 4px var(--mosh))' }}>🫠</span>;
+    case 'freeze-warp': return <span style={{ fontSize: 24, transform: 'skewX(20deg)' }}>🧊</span>;
+    case 'extreme': return <span style={{ fontSize: 24 }}>💥</span>;
+    case 'vhs-drag': return <span style={{ fontSize: 24 }}>📼</span>;
+    case 'tape-stutter': return <span style={{ fontSize: 24 }}>📺</span>;
+    case 'analog-melt': return <span style={{ fontSize: 24 }}>🔥</span>;
+    case 'monster-attack': return <span style={{ fontSize: 24 }}>🦖</span>;
+    case 'face-distortion': return <span style={{ fontSize: 24 }}>👽</span>;
+    case 'color-bloom': return <span style={{ fontSize: 24, filter: 'saturate(3)' }}>🌺</span>;
+    case 'liquid-melt': return <span style={{ fontSize: 24 }}>💧</span>;
+    case 'aggressive-stutter': return <span style={{ fontSize: 24, animation: 'shake 0.5s infinite' }}>💢</span>;
+    case 'pixel-burst': return <span style={{ fontSize: 24 }}>👾</span>;
+    case 'custom': return <span style={{ fontSize: 24 }}>⚙️</span>;
+    default: return <span style={{ fontSize: 24 }}>✨</span>;
+  }
+}
 
 /**
  * The tool rail. Collapsed it keeps the glyphs and drops the labels, so the
@@ -47,7 +107,7 @@ export function ToolBar({ vertical = true }: { vertical?: boolean }) {
   if (!vertical) {
     return (
       <div className={styles.mobileTools}>
-        {TOOLS.map((item) => (
+        {TOOL_GROUPS.flatMap(g => g.items).map((item) => (
           <button
             key={item.id}
             type="button"
@@ -57,11 +117,8 @@ export function ToolBar({ vertical = true }: { vertical?: boolean }) {
               item.mosh && styles.mobileToolMosh,
             )}
             onClick={() => {
-              // A phone has no second column to swap a panel into, so the tab
-              // bar is what opens the sheet — and tapping the active tab again
-              // folds it away instead of doing nothing.
               const active = tool === item.id && sheet === item.id;
-              setUi({ tool: item.id, sheet: active ? null : item.id, sheetPeek: false });
+              setUi({ tool: item.id as ToolId, sheet: active ? null : item.id as any, sheetPeek: false });
             }}
             title={item.hint}
           >
@@ -74,22 +131,27 @@ export function ToolBar({ vertical = true }: { vertical?: boolean }) {
 
   return (
     <nav className={styles.tools}>
-      {TOOLS.map((item) => (
-        <button
-          key={item.id}
-          type="button"
-          className={clsx(
-            styles.tool,
-            collapsed && styles.toolCollapsed,
-            tool === item.id && styles.toolActive,
-            item.mosh && styles.toolMosh,
-          )}
-          onClick={() => setUi({ tool: item.id })}
-          title={`${item.label} — ${item.hint}`}
-        >
-          <span className={styles.toolGlyph}>{item.glyph}</span>
-          {collapsed ? null : <span className={styles.toolLabel}>{item.label}</span>}
-        </button>
+      {TOOL_GROUPS.map((group) => (
+        <div key={group.title} className={styles.toolGroup}>
+          {!collapsed && <div className={styles.toolGroupTitle}>{group.title}</div>}
+          {group.items.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className={clsx(
+                styles.tool,
+                collapsed && styles.toolCollapsed,
+                tool === item.id && styles.toolActive,
+                item.mosh && styles.toolMosh,
+              )}
+              onClick={() => setUi({ tool: item.id as ToolId })}
+              title={`${item.label} — ${item.hint}`}
+            >
+              <span className={styles.toolGlyph}>{item.glyph}</span>
+              {collapsed ? null : <span className={styles.toolLabel}>{item.label}</span>}
+            </button>
+          ))}
+        </div>
       ))}
     </nav>
   );
@@ -283,7 +345,10 @@ function DatamoshToolPanel() {
               onClick={() => setActivePreset(item.id)}
               title={item.description}
             >
-              {item.label}
+              <div className={styles.presetVisual}>
+                {getPresetVisual(item.id)}
+              </div>
+              <div className={styles.presetLabel}>{item.label}</div>
             </button>
           ))}
         </div>
